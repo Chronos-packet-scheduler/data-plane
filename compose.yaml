@@ -1,7 +1,9 @@
 services:
   dev:
-    build: .
-    image: data-plane
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: data-plane-dev
     privileged: true
     volumes:
       - .:/workspace

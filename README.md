@@ -1,12 +1,25 @@
 # data-plane
 
-eBPF/XDP examples, built and run inside a Linux container.
+eBPF/XDP programs written in C (`bpf/`).
+
+- `Dockerfile` builds the production image (`ghcr.io/chronos-packet-scheduler/data-plane`), published on every push to `main` and on `v*` tags.
+- `Dockerfile.dev` + `compose.yaml` give a privileged dev container for experimenting with `examples/`.
 
 ## Start the environment
 
 ```sh
-docker compose up -d --build     # build the image and start the container
-docker compose exec dev bash     # open a shell (repeat in more terminals as needed)
+docker compose up -d --build
+docker compose exec dev bash
+```
+
+## Build the agent
+
+The agent only builds on Linux, so build it inside the dev container:
+
+```sh
+docker compose exec dev bash
+cd /workspace
+cargo build
 ```
 
 ## Build & test

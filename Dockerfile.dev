@@ -6,7 +6,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
+        ca-certificates \
         clang \
+        curl \
         gcc \
         llvm \
         libbpf-dev \
@@ -20,6 +22,10 @@ RUN apt-get update \
         xdp-tools \
     && ln -s "$(gcc -print-multiarch)/asm" /usr/include/asm \
     && rm -rf /var/lib/apt/lists/*
+
+# Rust toolchain for building the agent (the agent only builds on Linux)
+ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo PATH=/usr/local/cargo/bin:$PATH
+RUN curl -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal -c clippy,rustfmt
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
