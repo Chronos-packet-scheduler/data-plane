@@ -4,6 +4,7 @@
 
 SEC("xdp_pass")
 int xdp_pass_func(struct xdp_md *ctx) {
+    bpf_printk("xdp: packet len=%d", ctx->data_end - ctx->data);
     return XDP_PASS;
 }
 

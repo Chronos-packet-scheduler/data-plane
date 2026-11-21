@@ -1,0 +1,10 @@
+services:
+  dev:
+    build: .
+    image: data-plane
+    privileged: true
+    volumes:
+      - .:/workspace
+    working_dir: /workspace/examples
+    stdin_open: true
+    tty: true
