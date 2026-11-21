@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS bpf
+FROM ubuntu:26.04 AS bpf
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install --no-install-recommends -y clang llvm gcc libbpf-dev \
