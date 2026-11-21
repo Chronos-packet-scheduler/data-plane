@@ -9,7 +9,7 @@ docker compose up -d --build     # build the image and start the container
 docker compose exec dev bash     # open a shell (repeat in more terminals as needed)
 ```
 
-## Build, attach, trace
+## Build & test
 
 Terminal 1 (inside the container):
 
