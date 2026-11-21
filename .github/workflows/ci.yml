@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bpf:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y clang llvm libbpf-dev
+          sudo ln -sf "/usr/include/$(gcc -print-multiarch)/asm" /usr/include/asm
+      - run: for f in bpf/*.c examples/*.c; do clang -O2 -g -Wall -target bpf -c "$f" -o /tmp/$(basename "${f%.c}").o; done
+
+  agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets
+      - run: cargo test
+
+  image:
+    needs: [bpf, agent]
+    permissions:
+      contents: read
+      packages: write
+    uses: Chronos-packet-scheduler/.github/.github/workflows/publish-image.yml@main
